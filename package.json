@@ -1,0 +1,19 @@
+{
+  "name": "ciderlyricswindow",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vapormusic/ciderlyricswindow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vapormusic/ciderlyricswindow/issues"
+  },
+  "homepage": "https://github.com/vapormusic/ciderlyricswindow#readme",
+  "description": "Discrete Lyrics Window for Cider"
+}

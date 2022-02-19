@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<style>
+    #window {
+        width: 100%;
+        height: 100%;
+        -webkit-app-region: drag;
+        background: rgba(40, 40, 40) !important;
+    }
+
+    #app{
+        backdrop-filter: blur(97px) !important;
+    }
+
+    .lyrics-translation {
+        color: red;
+    }
+
+    .lyric-body{
+        margin-top: 40px !important;
+        -webkit-app-region: no-drag !important;
+        height: calc(100% - 40px) !important;
+    }
+
+    #titlebar {
+        display: block;
+        position: fixed;
+        height: 32px;
+        width: calc(100% - 2px);
+        -webkit-app-region: drag;
+        z-index: 3;
+    }
+
+    #window-controls-container{
+        padding-left: 5px;
+        padding-top: 3px;
+    }
+
+    .window-controls {   
+         display: contents;
+    }
+
+    .window-controls>div:hover {
+        background: rgb(200 200 200 / 10%);
+    }
+
+    .window-controls>div.minimize {
+        width: 100%;
+        height: 100%;
+        background-image: var(--gfx-closeBtn);
+        background-position: center;
+        background-repeat: no-repeat;
+        -webkit-app-region: no-drag;
+
+        /* &:hover {
+            background-color: rgb(196, 43, 28)
+        } */
+    }
+
+   .window-controls>div.minmax {
+        background-image: var(--gfx-maxBtn);
+        background-position: center;
+        background-repeat: no-repeat;
+        -webkit-app-region: no-drag;
+        width: 100%;
+        height: 100%;
+        -webkit-app-region: no-drag;
+    }
+
+    .window-controls>div.minmax.restore {
+        background-image: var(--gfx-restoreBtn);
+        -webkit-app-region: no-drag;
+    }
+
+    .window-controls>div.close {
+        background-image: var(--gfx-minBtn);
+        background-position: center;
+        background-repeat: no-repeat;
+        -webkit-app-region: no-drag;
+        width: 100%;
+        height: 100%;
+        -webkit-app-region: no-drag;
+    }
+
+     .window-controls>div.close {
+        height: 12px;
+        width: 12px;
+        background-color: rgb(255, 92, 92);
+        border-radius: 50%;
+        display: inline-block;
+        margin: auto 4px;
+        color: rgb(130, 0, 5);
+        -webkit-app-region: no-drag;
+        background-image: unset;
+    }
+
+    .window-controls {
+        width: 67px;
+    }
+
+  .window-controls>div.minmax {
+        height: 12px;
+        width: 12px;
+        background-color: rgb(255, 189, 76);
+        border-radius: 50%;
+        display: inline-block;
+        margin: auto 4px;
+        -webkit-app-region: no-drag;
+        background-image: unset;
+    }
+
+    .window-controls>div.minimize {
+        height: 12px;
+        width: 12px;
+        background-color: rgb(0, 202, 86);
+        border-radius: 50%;
+        display: inline-block;
+        margin: auto 4px auto 4px;
+        -webkit-app-region: no-drag;
+        background-image: unset;
+    }
+</style>
+
+<script type="text/x-template" id="lyrics-view">
+    <div ref="lyricsview" class="md-body lyric-body">
+        <template v-if="lyrics && lyrics != [] && lyrics.length > 0">
+            <template v-for="(lyric, index) in lyrics" v-if="lyric && lyric.line && lyric.line != 'lrcInstrumental'">
+                <h3 class="lyric-line" @click="seekTo(lyric.startTime)" :class="{unsynced : lyric.startTime == 9999999}"
+                    v-bind:line-index="index.toString()">
+                    <template v-if="richlyrics && richlyrics != [] && richlyrics.length > 0">
+                        <div class="richl" >
+                            <template v-for="verse in getVerseLine(index-1)" >
+                                <span class="verse" :lyricstart="lyric.startTime" :versestart="verse.o" >{{ verse.c }}</span>
+                            </template>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <div class="norm" >   
+                            {{ lyric.line }}
+                        </div>
+                    </template>
+                    <div class="lyrics-translation" v-if="lyric.translation && lyric.translation != ''">
+                        {{ lyric.translation }}
+                    </div>
+                </h3>
+            </template>
+            <template v-else>
+                <h3 class="lyric-line" @click="seekTo(lyric.startTime)"
+                    :start="lyric.startTime"
+                    :end="lyric.endTime" v-bind:line-index="index.toString()">
+                    <div class="lyricWaiting">
+                        <div class='WaitingDot1'></div>
+                        <div class='WaitingDot2'></div>
+                        <div class='WaitingDot3'></div>
+                    </div>
+                </h3>
+            </template>
+        </template>
+        <template v-else>
+            <div class="no-lyrics">
+                No Lyrics</div>
+        </template>
+    </div>
+</script>
+
+<body >
+    <div id="window" ref="main">
+        <header id="titlebar">
+            <div class="app-chrome-item full-height" id="window-controls-container"
+                >
+                <div class="window-controls">
+                    <div class="close" @click="mode('close')"></div>
+                    
+                    <div class="minmax restore" v-if="maximized" @click="mode('maximize')">
+                    </div>
+                    <div class="minmax" v-else @click="mode('maximize')"></div>
+                    <div class="minimize" @click="mode('minimize')"></div>
+                </div>
+            </div>
+        </header>
+        <div id="app">
+            <lyrics-view :time="lyriccurrenttime" :lyrics="lyrics" :richlyrics="richlyrics"></lyrics-view>
+        </div>
+    </div>
+</body>
+<script src="http://localhost:9000/js/vue.dev.js"></script>
+<script src="./index.window.js"></script>
+<link rel="stylesheet/less" type="text/css" href="http://localhost:9000/style.less" />
+<script src="http://localhost:9000/js/less.js"></script>
+
+</html>
