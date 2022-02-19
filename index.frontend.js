@@ -5,10 +5,11 @@ class LyricsWindowFrontend {
         //     // Alert popup
         //     bootbox.alert(`Backend says: ${message}`)
         // })
-        console.log('appready',app)
         app.$watch('lyrics', function (newVal, oldVal) {
             LyricsWindowPlugin.updateLyrics(newVal)
-        })
+        }, {
+            deep: true
+          })
 
         app.$watch('richlyrics', function (newVal, oldVal) {
             LyricsWindowPlugin.updateRichLyrics(newVal)
