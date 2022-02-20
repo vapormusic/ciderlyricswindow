@@ -164,13 +164,19 @@ const app = new Vue({
         lyriccurrenttime: 0,
         richlyrics: [],
         maximized: false,
-        background : ''
+        background : '',
+        playing: false,
+        hideControls: true,
+        lyricduration: 0,
     },
     watch: {
         background: function(){
-            if (this.background != null && this.background != ""){
-            this.$refs.main.setAttribute('style',  `background:url('${app.background}')` + " !important; background-repeat: no-repeat !important; background-size: cover !important;")}
-            else {this.$refs.main.setAttribute('style','')}
+            if (this.background != null && this.background != "") {
+
+                this.$refs.controls.setAttribute('style', `background:url('${app.background}')` + " !important; background-repeat: no-repeat !important; background-size: cover !important;")
+                this.$refs.main.setAttribute('style', `background:url('${app.background}')` + " !important; background-repeat: no-repeat !important; background-size: cover !important;")
+            }
+            else { this.$refs.main.setAttribute('style', ''); this.$refs.controls.setAttribute('style', '') }
         }
     },
     methods: {
@@ -190,13 +196,20 @@ const app = new Vue({
                     break;
             }
 
-        }
+        },
+        songNavigate(val){
+            ipcRenderer.invoke("LW_SongControl", val)
+        },
+        timeFormat(s){
+            return(s-(s%=60))/60+(9<s?':':':0')+s }
 
 
     },
     async mounted() {
         ipcRenderer.on("playbackInfoLW", (event, message) => {
             this.lyriccurrenttime = (message.durationInMillis - message.remainingTime) / 1000;
+            this.lyricduration = Math.round(message.durationInMillis / 1000);
+            this.playing = message.status ?? false;
         })
         ipcRenderer.on("LyricsUpdate", (event, message) => {
             this.lyrics = message

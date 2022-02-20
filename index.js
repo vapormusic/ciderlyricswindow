@@ -38,7 +38,7 @@ module.exports = class LyricsWindowPlugin {
                     frame: false,
                     minWidth: 350,
                     minHeight: 230,
-                    alwaysOnTop : false, // change it to false to make it normal
+                    // alwaysOnTop : false, // change it to false to make it normal
                     webPreferences: {
                         nodeIntegration: true, contextIsolation: false
                     }
@@ -113,6 +113,23 @@ module.exports = class LyricsWindowPlugin {
         ipcMain.handle('LW_Minimize', async (_event, arg) => {
             if (this.win) {
                 this.win.minimize();
+
+            }
+        })
+        ipcMain.handle('LW_SongControl', async (_event, arg) => {
+            if (this.win) {
+                switch (arg){
+                    case 'prev':
+                        this.env.utils.playback.previous();
+                        break;
+                    case 'next':
+                        this.env.utils.playback.next();
+                        break; 
+                    case 'pause':    
+                    case 'play':
+                        this.env.utils.playback.playPause();
+                        break;         
+                }
 
             }
         })

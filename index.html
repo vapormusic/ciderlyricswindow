@@ -36,6 +36,72 @@
         padding-top: 3px;
     }
 
+    #playback-container{
+        position: absolute;
+        width: 100%;
+        display: none;
+        justify-content: center;
+        bottom: 0;
+        z-index: 2;
+        background: rgba(240,240,240,0.1);
+        backdrop-filter: blur(110px);
+    }
+
+    .controls-bg{
+        position: absolute;
+        height: 40px;
+        width: 100%;
+        display: none;
+        justify-content: center;
+        bottom: 0;
+    }
+    
+    #window:hover .lyric-body{
+        padding-bottom: 40px !important;
+        scroll-padding-bottom: 40px !important;
+    }
+
+    #playback-container:hover .lyric-body{
+        padding-bottom: 40px !important;
+        scroll-padding-bottom: 40px !important;
+    }
+
+    #window:hover #playback-container{
+        display: flex !important;
+    }
+    
+    #window:hover #playback-container{
+        display: flex !important;
+    }
+
+    #playback-container:hover{
+        display: flex !important;
+    }
+
+    #window:hover .controls-bg{
+        display: flex !important;
+    }
+
+    .controls-bg:hover{
+        display: flex !important;
+    }
+
+    .lwtime-time{
+        width: auto;
+        position: absolute;
+        left: 10px;
+        font-size: 0.9em;
+        height: 100%;
+        line-height: 250%;
+    }
+
+    .lwtime-duration{
+        width: auto;
+        position: absolute;
+        right: 10px;
+        line-height: 80%;
+    }
+
     .window-controls {   
          display: contents;
     }
@@ -165,7 +231,7 @@
 
 <body >
     <div id="window" ref="main">
-        <header id="titlebar">
+        <header id="titlebar" >
             <div class="app-chrome-item full-height" id="window-controls-container"
                 >
                 <div class="window-controls">
@@ -180,6 +246,24 @@
         </header>
         <div id="app">
             <lyrics-view :time="lyriccurrenttime" :lyrics="lyrics" :richlyrics="richlyrics"></lyrics-view>
+            <div class="controls-bg" ref="controls"></div>
+            <div id="playback-container">
+
+                
+                <div class="app-chrome-item">
+                    <button class="playback-button previous" @click="songNavigate('prev')"></button>
+                </div>
+                <div class="app-chrome-item">
+                    <button class="playback-button pause" @click="songNavigate('pause')" v-if="playing"></button>
+                    <button class="playback-button play" @click="songNavigate('play')" v-else></button>
+                </div>
+                <div class="app-chrome-item">
+                    <button class="playback-button next" @click="songNavigate('next')"></button>
+                </div>
+            </div>
+            <div class="controls-bg" style="z-index: 6; pointer-events: none;">
+                <div class="lwtime-time" style="width: auto">{{ timeFormat(Math.round(lyriccurrenttime)) + "/" + timeFormat(lyricduration) }}</div>
+            </div>
         </div>
     </div>
 </body>
