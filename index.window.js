@@ -168,6 +168,7 @@ const app = new Vue({
         playing: false,
         hideControls: true,
         lyricduration: 0,
+        onTop: false,
     },
     watch: {
         background: function(){
@@ -201,7 +202,13 @@ const app = new Vue({
             ipcRenderer.invoke("LW_SongControl", val)
         },
         timeFormat(s){
-            return(s-(s%=60))/60+(9<s?':':':0')+s }
+            return(s-(s%=60))/60+(9<s?':':':0')+s 
+        },
+        async setOnTop(val){
+            this.onTop = await ipcRenderer.invoke("LW_SetTop", (val ?? ""))
+            console.log('onTop', this.onTop)
+            window.localStorage.setItem('onTop', this.onTop);
+        }
 
 
     },
@@ -223,6 +230,8 @@ const app = new Vue({
         })
         this.lyrics = await ipcRenderer.invoke("LW_GetLyrics",'')
         this.background = await ipcRenderer.invoke("LW_GetBG",'')
-        
+        this.onTop = window.localStorage.getItem('onTop') ?? true
+        console.log(this.onTop)
+        this.setOnTop(this.onTop)
     }
 })

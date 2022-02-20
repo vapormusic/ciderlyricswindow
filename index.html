@@ -100,6 +100,14 @@
         position: absolute;
         right: 10px;
         line-height: 80%;
+        font-size: 0.9em;
+        height: 100%;
+        line-height: 250%;
+        pointer-events: auto;
+    }
+
+    .lwtime-duration.disabled{
+        filter: grayscale(1);
     }
 
     .window-controls {   
@@ -263,6 +271,7 @@
             </div>
             <div class="controls-bg" style="z-index: 6; pointer-events: none;">
                 <div class="lwtime-time" style="width: auto">{{ timeFormat(Math.round(lyriccurrenttime)) + "/" + timeFormat(lyricduration) }}</div>
+                <div class="lwtime-duration" :class="{'disabled': !onTop } "style="width: auto" @click="setOnTop()">📍</div>
             </div>
         </div>
     </div>

@@ -38,7 +38,9 @@ module.exports = class LyricsWindowPlugin {
                     frame: false,
                     minWidth: 350,
                     minHeight: 230,
-                    // alwaysOnTop : false, // change it to false to make it normal
+                    x: 0,
+                    y: 0,
+                    alwaysOnTop : true, // change it to false to make it normal
                     webPreferences: {
                         nodeIntegration: true, contextIsolation: false
                     }
@@ -116,6 +118,33 @@ module.exports = class LyricsWindowPlugin {
 
             }
         })
+
+        ipcMain.handle('LW_SetTop', (_event, arg) => {
+            if (this.win) {
+                if (arg === ""){
+                    if(this.win.isAlwaysOnTop()){
+                    this.win.setAlwaysOnTop(false);
+                        return false;
+                    } else {
+                        this.win.setAlwaysOnTop(true);
+                        return true;
+                    }
+                } else {
+                    console.log('onTop',arg)
+                    this.win.setAlwaysOnTop(arg === 'true');
+                    return (arg === 'true');
+                }
+
+            } else {return false}
+        })
+
+        ipcMain.handle('LW_OnTop', async (_event, arg) => {
+            if (this.win) {
+                return this.win.isAlwaysOnTop();
+
+            } else {return false}
+        })
+
         ipcMain.handle('LW_SongControl', async (_event, arg) => {
             if (this.win) {
                 switch (arg){
