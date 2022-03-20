@@ -111,7 +111,8 @@
     }
 
     .window-controls {   
-         display: contents;
+         display: initial;
+         -webkit-app-region: no-drag;
     }
 
     .window-controls>div:hover {
@@ -156,7 +157,16 @@
         -webkit-app-region: no-drag;
     }
 
-     .window-controls>div.close {
+    .window-controls>div {
+        transition: background-color 0.25s;
+    }
+    .window-controls:not(:hover)>div {
+        background-color: grey !important;
+        transition: background-color 0.25s;
+    }
+
+    
+    .window-controls>div.close {
         height: 12px;
         width: 12px;
         background-color: rgb(255, 92, 92);
@@ -193,6 +203,18 @@
         -webkit-app-region: no-drag;
         background-image: unset;
     }
+
+    .lyric-body> .lyric-line{
+        transition: filter var(--appleEase) 0.5s;
+    }
+    .lyric-body:hover > .lyric-line:not(.active) {
+        filter: none !important;
+    }
+    .lyric-body > .lyric-line:not(.active) {
+        transition: all var(--appleEase) 0.3s , filter var(--appleEase) 0.5s;
+    }
+
+
 </style>
 
 <script type="text/x-template" id="lyrics-view">
