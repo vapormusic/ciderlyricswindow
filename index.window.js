@@ -4,7 +4,7 @@ Vue.component('lyrics-view', {
     data: function () {
         return {
             app: this.$root,
-            airplayOn = false
+            airplayOn : false
         }
     },
     watch: {
