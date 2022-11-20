@@ -19,8 +19,8 @@ class LyricsWindowFrontend {
             LyricsWindowPlugin.updateBGArtwork(newVal)
         })
         
-        app.$watch('activeCast', function (newVal, oldVal) {
-            let airPlay = (newVal?.length ?? 0) > 0
+        app.$watch('activeCasts', function (newVal, oldVal) {
+            let airPlay = newVal[0]?.hasOwnProperty('airplay2') ?? false
             LyricsWindowPlugin.checkAirPlay(airPlay)
         }, {
             deep: true
