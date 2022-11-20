@@ -18,6 +18,13 @@ class LyricsWindowFrontend {
         app.$watch('currentArtUrl', function (newVal, oldVal) {
             LyricsWindowPlugin.updateBGArtwork(newVal)
         })
+        
+        app.$watch('activeCast', function (newVal, oldVal) {
+            let airPlay = (newVal?.length ?? 0) > 0
+            LyricsWindowPlugin.checkAirPlay(airPlay)
+        }, {
+            deep: true
+        })
 
         const menuEntry = new CiderFrontAPI.Objects.MenuEntry()
         menuEntry.name = "Toggle Lyrics Window"
@@ -42,6 +49,10 @@ class LyricsWindowFrontend {
 
     updateBGArtwork(val) {
         ipcRenderer.send("LWBGUpdate", val)
+    }
+    
+    checkAirPlay(val) {
+        ipcRenderer.send("LWAirPlayStatus", val)
     }
 }
 
