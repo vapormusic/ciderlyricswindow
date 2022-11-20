@@ -4,6 +4,7 @@ Vue.component('lyrics-view', {
     data: function () {
         return {
             app: this.$root,
+            airplayOn = false
         }
     },
     watch: {
@@ -76,7 +77,7 @@ Vue.component('lyrics-view', {
             if (startTime != 9999999) this.app.seekTo(startTime);
         },
         getActiveLyric() {
-            const delayfix = 0.1
+            const delayfix = this.airplayOn ? -2.5 : 0.1
             const prevLine = app.currentLyricsLine;
             for (var i = 0; i < this.lyrics.length; i++) {
                 if (this.time + delayfix >= this.lyrics[i].startTime && this.time + delayfix <= this.lyrics[i].endTime) {
@@ -228,6 +229,11 @@ const app = new Vue({
             if (message && message.length > 0) {
             this.background = message}
         })
+        
+        ipcRenderer.on("AirPlayStatus", (event, message) => {
+            this.airplayOn = message
+        })  
+        
         this.lyrics = await ipcRenderer.invoke("LW_GetLyrics",'')
         this.background = await ipcRenderer.invoke("LW_GetBG",'')
         this.onTop = window.localStorage.getItem('onTop') ?? true
