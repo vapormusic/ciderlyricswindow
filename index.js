@@ -65,7 +65,13 @@ module.exports = class LyricsWindowPlugin {
                 this.win.webContents.send('playbackInfoLW', arg);
             }
         })
-
+        
+        ipcMain.on('LWAirPlayStatus', (_event, arg) => {
+            if (this.win) {
+                this.win.webContents.send('AirPlayStatus', arg);
+            }
+        })
+                
         ipcMain.on('LWLyricsUpdate', (_event, arg) => {
             if (this.win) {
                 this.win.webContents.send('LyricsUpdate', arg);
